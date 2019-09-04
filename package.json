@@ -1,10 +1,24 @@
 {
   "name": "reactjs-crud",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "description": "CRUD application using ReactJS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chyuck/reactjs-crud.git"
+  },
+  "keywords": [
+    "reactjs",
+    "crud"
+  ],
+  "author": "Andrey Sergeev",
+  "license": "MIT",
+  "homepage": "https://github.com/chyuck/reactjs-crud#readme",
   "dependencies": {
+    "bootstrap": "^4.3.1",
     "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.12",
     "react-dom": "^16.9.0",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1"
   },
   "scripts": {
