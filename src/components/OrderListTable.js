@@ -18,7 +18,11 @@ export default class OrderListTable extends React.Component {
                 </thead>
                 <tbody>
                     { this.props.orders.map(order => (
-                        <OrderListTableRow key={order.id} order={order} />
+                        <OrderListTableRow 
+                            key={order.id} 
+                            order={order}
+                            onUpdate={this.props.onUpdate}
+                            onDelete={this.props.onDelete} />
                     ))}
                 </tbody>
             </Table>

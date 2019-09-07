@@ -17,9 +17,16 @@ export default class OrderListView extends React.Component {
         this.handleCreateOrderButtonClick = this.handleCreateOrderButtonClick.bind(this);
         this.handleCreateOrderModalClose = this.handleCreateOrderModalClose.bind(this);
         this.handleCreateOrderModalSubmit = this.handleCreateOrderModalSubmit.bind(this);
+
+        this.handleOrderUpdate = this.handleOrderUpdate.bind(this);
+        this.handleOrderDelete = this.handleOrderDelete.bind(this);
     }
     
     async componentDidMount() {
+        await this.refreshOrders();
+    }
+
+    async refreshOrders() {
         const orders = await dataService.getOrders();
 
         this.setState({ orders });
@@ -35,8 +42,21 @@ export default class OrderListView extends React.Component {
 
     async handleCreateOrderModalSubmit(newOrder) {
         await dataService.createOrder(newOrder);
+        const orders = await dataService.getOrders();
 
-        this.setState({ showCreateOrderModal: false });
+        this.setState({ showCreateOrderModal: false, orders });
+    }
+
+    async handleOrderUpdate(order) {
+        await dataService.updateOrder(order);
+        
+        await this.refreshOrders();
+    }
+
+    async handleOrderDelete(order) {
+        await dataService.deleteOrder(order);
+        
+        this.refreshOrders();
     }
 
     render() {
@@ -54,7 +74,10 @@ export default class OrderListView extends React.Component {
                     onSubmit={this.handleCreateOrderModalSubmit} 
                 />
 
-                <OrderListTable orders={this.state.orders} />
+                <OrderListTable 
+                    orders={this.state.orders} 
+                    onUpdate={this.handleOrderUpdate} 
+                    onDelete={this.handleOrderDelete}/>
             </div>
         );
     }

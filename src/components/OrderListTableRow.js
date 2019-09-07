@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import * as formatter from "../helpers/formatter";
 import DeleteOrderModal from "./DeleteOrderModal";
 import UpdateOrderModal from "./UpdateOrderModal";
-import * as dataService from "../services/dataService";
 
 export default class OrderListTableRow extends React.Component {
     constructor(props) {
@@ -31,10 +30,10 @@ export default class OrderListTableRow extends React.Component {
         this.setState({ showUpdateOrderModal: false });
     }
 
-    async handleUpdateOrderModalSubmit(updatedOrder) {
-        await dataService.updateOrder(updatedOrder);
-        
+    async handleUpdateOrderModalSubmit(updatedOrder) { 
         this.setState({ showUpdateOrderModal: false });
+
+        await this.props.onUpdate(updatedOrder);
     }
 
     handleDeleteButtonClick() {
@@ -46,9 +45,9 @@ export default class OrderListTableRow extends React.Component {
     }
 
     async handleDeleteOrderModalSubmit() {
-        await dataService.deleteOrder(this.props.order.id);
-        
         this.setState({ showDeleteOrderModal: false });
+
+        await this.props.onDelete(this.props.order);
     }
 
     render() {

@@ -17,7 +17,6 @@ export default class UpdateOrderModal extends React.Component {
         this.handleActiveChange = this.handleActiveChange.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
     }
 
@@ -36,16 +35,12 @@ export default class UpdateOrderModal extends React.Component {
     async handleSubmit() {
         await this.props.onSubmit({
             id: this.props.order.id,
-            product: this.state.order.product,
-            quantity: this.state.order.quantity,
-            active: this.state.order.active,
-            created: this.props.created,
-            updated: this.props.updated,
+            product: this.state.product,
+            quantity: this.state.quantity,
+            active: this.state.active,
+            created: this.props.order.created,
+            updated: this.props.order.updated,
         });
-    }
-
-    handleClose() {
-        this.props.onClose();
     }
 
     handleOpen() {
@@ -58,7 +53,7 @@ export default class UpdateOrderModal extends React.Component {
 
     render() {
         return (
-            <Modal show={this.props.show} onHide={this.handleClose} onShow={this.handleOpen}>
+            <Modal show={this.props.show} onHide={this.props.onClose} onShow={this.handleOpen}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Order</Modal.Title>
                 </Modal.Header>
@@ -92,7 +87,7 @@ export default class UpdateOrderModal extends React.Component {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.handleClose}>Close</Button>
+                    <Button variant="secondary" onClick={this.props.onClose}>Close</Button>
                     <Button variant="success" onClick={this.handleSubmit}>Update</Button>
                 </Modal.Footer>
             </Modal>

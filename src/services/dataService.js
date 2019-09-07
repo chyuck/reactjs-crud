@@ -40,7 +40,7 @@ export async function createOrder(order) {
 }
 
 export async function updateOrder(order) {
-    const existingOrder = getOrder(order.id);
+    const existingOrder = await getOrder(order.id);
     if (!existingOrder) {
         throw new Error(`Order with ID=${order.id} is not found.`);
     }
@@ -55,13 +55,8 @@ export async function updateOrder(order) {
     return Promise.resolve(existingOrder);
 }
 
-export async function deleteOrder(id) {
-    const existingOrder = getOrder(id);
-    if (!existingOrder) {
-        throw new Error(`Order with ID=${id} is not found.`);
-    }
+export async function deleteOrder(order) {
+    orders = orders.filter(o => o.id !== order.id);
 
-    orders = orders.filter(order => order.id !== existingOrder.id);
-
-    return Promise.resolve(existingOrder);
+    return Promise.resolve(order);
 }

@@ -16,7 +16,6 @@ export default class CreateOrderModal extends React.Component {
         this.handleActiveChange = this.handleActiveChange.bind(this);
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
     }
 
@@ -36,10 +35,6 @@ export default class CreateOrderModal extends React.Component {
         await this.props.onSubmit(this.state);
     }
 
-    handleClose() {
-        this.props.onClose();
-    }
-
     handleOpen() {
         this.setState({
             product: "",
@@ -50,7 +45,7 @@ export default class CreateOrderModal extends React.Component {
 
     render() {
         return (
-            <Modal show={this.props.show} onHide={this.handleClose} onShow={this.handleOpen}>
+            <Modal show={this.props.show} onHide={this.props.onClose} onShow={this.handleOpen}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Order</Modal.Title>
                 </Modal.Header>
@@ -72,7 +67,7 @@ export default class CreateOrderModal extends React.Component {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.handleClose}>Close</Button>
+                    <Button variant="secondary" onClick={this.props.onClose}>Close</Button>
                     <Button variant="success" onClick={this.handleSubmit}>Create</Button>
                 </Modal.Footer>
             </Modal>
