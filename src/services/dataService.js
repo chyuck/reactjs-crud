@@ -1,4 +1,4 @@
-import { uuid } from "uuid/v1";
+import uuid from "uuid/v1";
 
 var orders = [
     {  
@@ -27,7 +27,7 @@ export async function getOrder(id) {
     return Promise.resolve(orders.find(order => order.id === id));
 }
 
-export async function create(order) {
+export async function createOrder(order) {
     order.id = uuid();
     
     const timestamp = new Date().toISOString();
@@ -39,7 +39,7 @@ export async function create(order) {
     return Promise.resolve(order);
 }
 
-export async function update(order) {
+export async function updateOrder(order) {
     const existingOrder = getOrder(order.id);
     if (!existingOrder) {
         throw new Error(`Order with ID=${order.id} is not found.`);
