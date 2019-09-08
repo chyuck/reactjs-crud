@@ -25,11 +25,11 @@ export default class UpdateOrderModal extends React.Component {
     }
 
     handleQuantityChange(event) {
-        this.setState({ quantity: event.target.value });
+        this.setState({ quantity: parseInt(event.target.value) });
     }
 
     handleActiveChange(event) {
-        this.setState({ active: event.target.checked });
+        this.setState({ active: event.target.value === "Yes" });
     }
 
     async handleSubmit() {

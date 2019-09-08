@@ -1,62 +1,29 @@
-import uuid from "uuid/v1";
+import config from "../helpers/config";
+import LocalDataService from "./LocalDataService";
+import ApiDataService from "./ApiDataService";
 
-var orders = [
-    {  
-        id: "a5b97d20-aa3b-11e9-8f1e-ffa5d9f32bc9",
-        product: "Apple",
-        quantity: 3,
-        active: true,
-        created: "2019-07-19T15:41:17.169Z",
-        updated: "2019-07-19T15:41:17.169Z"
-     },
-     {  
-        id: "12745fae-0859-483b-ae7a-f3970f9d8bfd",
-        product: "Orange",
-        quantity: 2,
-        active: true,
-        created: "2019-07-19T15:42:18.160Z",
-        updated: "2019-07-19T15:42:55.189Z"
-     }
-];
-
-export async function getOrders() {
-    return Promise.resolve(orders);
-}
-
-export async function getOrder(id) {
-    return Promise.resolve(orders.find(order => order.id === id));
-}
-
-export async function createOrder(order) {
-    order.id = uuid();
-    
-    const timestamp = new Date().toISOString();
-    order.created = timestamp;
-    order.updated = timestamp;
-
-    orders.push(order);
-
-    return Promise.resolve(order);
-}
-
-export async function updateOrder(order) {
-    const existingOrder = await getOrder(order.id);
-    if (!existingOrder) {
-        throw new Error(`Order with ID=${order.id} is not found.`);
+export default class DataService {
+    constructor() {
+        this.dataService = config.api.use ? new ApiDataService(config.api.url) : new LocalDataService();
     }
 
-    const timestamp = new Date().toISOString();
-    existingOrder.update = timestamp;
-
-    existingOrder.product = order.product;
-    existingOrder.quantity = order.quantity;
-    existingOrder.active = order.active;
+    async getOrders() {
+        return await this.dataService.getOrders();
+    }
     
-    return Promise.resolve(existingOrder);
-}
-
-export async function deleteOrder(order) {
-    orders = orders.filter(o => o.id !== order.id);
-
-    return Promise.resolve(order);
+    async getOrder(id) {
+        return await this.dataService.getOrder(id);
+    }
+    
+    async createOrder(order) {
+        return await this.dataService.createOrder(order);
+    }
+    
+    async updateOrder(order) {
+        return await this.dataService.updateOrder(order);
+    }
+    
+    async deleteOrder(order) {
+        return await this.dataService.deleteOrder(order);
+    }
 }

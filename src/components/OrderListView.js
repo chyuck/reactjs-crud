@@ -1,13 +1,15 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import "./OrderListView.css";
-import * as dataService from "../services/dataService";
+import DataService from "../services/DataService";
 import OrderListTable from "./OrderListTable";
 import CreateOrderModal from "./CreateOrderModal";
 
 export default class OrderListView extends React.Component {
     constructor(props) {
         super(props);
+
+        this.dataService = new DataService();
 
         this.state = { 
             orders: [],
@@ -27,7 +29,7 @@ export default class OrderListView extends React.Component {
     }
 
     async refreshOrders() {
-        const orders = await dataService.getOrders();
+        const orders = await this.dataService.getOrders();
 
         this.setState({ orders });
     }
@@ -41,20 +43,20 @@ export default class OrderListView extends React.Component {
     }
 
     async handleCreateOrderModalSubmit(newOrder) {
-        await dataService.createOrder(newOrder);
-        const orders = await dataService.getOrders();
+        await this.dataService.createOrder(newOrder);
+        const orders = await this.dataService.getOrders();
 
         this.setState({ showCreateOrderModal: false, orders });
     }
 
     async handleOrderUpdate(order) {
-        await dataService.updateOrder(order);
+        await this.dataService.updateOrder(order);
         
         await this.refreshOrders();
     }
 
     async handleOrderDelete(order) {
-        await dataService.deleteOrder(order);
+        await this.dataService.deleteOrder(order);
         
         this.refreshOrders();
     }
