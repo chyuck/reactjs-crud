@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal, Form } from "react-bootstrap";
+import * as validator from "../helpers/validator";
 
 export default class CreateOrderModal extends React.Component {
     constructor(props) {
@@ -7,8 +8,8 @@ export default class CreateOrderModal extends React.Component {
         
         this.state = {
             product: "",
-            quantity: 1,
-            active: true
+            quantity: "",
+            active: validator.activeValues.yes
         };
 
         this.handleProductChange = this.handleProductChange.bind(this);
@@ -24,26 +25,35 @@ export default class CreateOrderModal extends React.Component {
     }
 
     handleQuantityChange(event) {
-        this.setState({ quantity: parseInt(event.target.value) });
+        this.setState({ quantity: event.target.value });
     }
 
     handleActiveChange(event) {
-        this.setState({ active: event.target.value === "Yes" });
+        this.setState({ active: event.target.value });
     }
 
     async handleSubmit() {
-        await this.props.onSubmit(this.state);
+        await this.props.onSubmit({
+            product: this.state.product,
+            quantity: parseInt(this.state.quantity),
+            active: this.state.active === validator.activeValues.yes
+        });
     }
 
     handleOpen() {
         this.setState({
             product: "",
-            quantity: 1,
-            active: true
+            quantity: "",
+            active: validator.activeValues.yes
         });
     }
 
     render() {
+        const productValid = validator.validateProduct(this.state.product);
+        const quantityValid = validator.validateQuantity(this.state.quantity);
+        const activeValid = validator.validateActive(this.state.active);
+        const buttonEnabled = productValid && quantityValid && activeValid;
+
         return (
             <Modal show={this.props.show} onHide={this.props.onClose} onShow={this.handleOpen}>
                 <Modal.Header closeButton>
@@ -52,23 +62,47 @@ export default class CreateOrderModal extends React.Component {
                 <Modal.Body>
                     <Form.Group>
                         <Form.Label>Product</Form.Label>
-                        <Form.Control type="text" value={this.state.product} onChange={this.handleProductChange}/>
+                        <Form.Control
+                            type="text" 
+                            size="sm"
+                            value={this.state.product} 
+                            onChange={this.handleProductChange}
+                            isValid={productValid}
+                            isInvalid={!productValid}/>
+                        <Form.Control.Feedback type="valid">{validator.validMessage}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{validator.errorMessages.product}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Quantity</Form.Label>
-                        <Form.Control type="number" value={this.state.quantity} onChange={this.handleQuantityChange}/>
+                        <Form.Control 
+                            type="number" 
+                            size="sm"
+                            value={this.state.quantity} 
+                            onChange={this.handleQuantityChange}
+                            isValid={quantityValid}
+                            isInvalid={!quantityValid}/>
+                        <Form.Control.Feedback type="valid">{validator.validMessage}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{validator.errorMessages.quantity}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Active</Form.Label>
-                        <Form.Control as="select" value={this.state.active ? "Yes" : "No"} onChange={this.handleActiveChange}>
-                            <option>Yes</option>
-                            <option>No</option>
+                        <Form.Control 
+                            as="select" 
+                            size="sm"
+                            value={this.state.active} 
+                            onChange={this.handleActiveChange}
+                            isValid={activeValid}
+                            isInvalid={!activeValid}>
+                            <option>{validator.activeValues.yes}</option>
+                            <option>{validator.activeValues.no}</option>
                         </Form.Control>
+                        <Form.Control.Feedback type="valid">{validator.validMessage}</Form.Control.Feedback>
+                        <Form.Control.Feedback type="invalid">{validator.errorMessages.active}</Form.Control.Feedback>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.props.onClose}>Close</Button>
-                    <Button variant="success" onClick={this.handleSubmit}>Create</Button>
+                    <Button variant="success" onClick={this.handleSubmit} disabled={!buttonEnabled}>Create</Button>
                 </Modal.Footer>
             </Modal>
         )
