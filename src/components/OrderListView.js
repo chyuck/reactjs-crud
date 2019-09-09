@@ -15,47 +15,40 @@ export default class OrderListView extends React.Component {
             orders: [],
             showCreateOrderModal: false
         };
-
-        this.handleCreateOrderButtonClick = this.handleCreateOrderButtonClick.bind(this);
-        this.handleCreateOrderModalClose = this.handleCreateOrderModalClose.bind(this);
-        this.handleCreateOrderModalSubmit = this.handleCreateOrderModalSubmit.bind(this);
-
-        this.handleOrderUpdate = this.handleOrderUpdate.bind(this);
-        this.handleOrderDelete = this.handleOrderDelete.bind(this);
     }
     
     async componentDidMount() {
         await this.refreshOrders();
     }
 
-    async refreshOrders() {
+    refreshOrders = async () => {
         const orders = await this.dataService.getOrders();
 
         this.setState({ orders });
     }
 
-    handleCreateOrderButtonClick() {
+    handleCreateOrderButtonClick = () => {
         this.setState({ showCreateOrderModal: true });
     }
 
-    handleCreateOrderModalClose() {
+    handleCreateOrderModalClose = () => {
         this.setState({ showCreateOrderModal: false });
     }
 
-    async handleCreateOrderModalSubmit(newOrder) {
+    handleCreateOrderModalSubmit = async (newOrder) => {
         await this.dataService.createOrder(newOrder);
         const orders = await this.dataService.getOrders();
 
         this.setState({ showCreateOrderModal: false, orders });
     }
 
-    async handleOrderUpdate(order) {
+    handleOrderUpdate = async (order) => {
         await this.dataService.updateOrder(order);
         
         await this.refreshOrders();
     }
 
-    async handleOrderDelete(order) {
+    handleOrderDelete = async (order) => {
         await this.dataService.deleteOrder(order);
         
         this.refreshOrders();

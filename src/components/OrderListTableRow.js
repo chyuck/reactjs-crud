@@ -12,39 +12,31 @@ export default class OrderListTableRow extends React.Component {
             showUpdateOrderModal: false,
             showDeleteOrderModal: false
         };
-
-        this.handleUpdateButtonClick = this.handleUpdateButtonClick.bind(this);
-        this.handleUpdateOrderModalClose = this.handleUpdateOrderModalClose.bind(this);
-        this.handleUpdateOrderModalSubmit = this.handleUpdateOrderModalSubmit.bind(this);
-
-        this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
-        this.handleDeleteOrderModalClose = this.handleDeleteOrderModalClose.bind(this);
-        this.handleDeleteOrderModalSubmit = this.handleDeleteOrderModalSubmit.bind(this);
     }
 
-    handleUpdateButtonClick() {
+    handleUpdateButtonClick = () => {
         this.setState({ showUpdateOrderModal: true });
     }
 
-    handleUpdateOrderModalClose() {
+    handleUpdateOrderModalClose = () => {
         this.setState({ showUpdateOrderModal: false });
     }
 
-    async handleUpdateOrderModalSubmit(updatedOrder) { 
+    handleUpdateOrderModalSubmit = async (updatedOrder) => { 
         this.setState({ showUpdateOrderModal: false });
 
         await this.props.onUpdate(updatedOrder);
     }
 
-    handleDeleteButtonClick() {
+    handleDeleteButtonClick = () => {
         this.setState({ showDeleteOrderModal: true });
     }
 
-    handleDeleteOrderModalClose() {
+    handleDeleteOrderModalClose = () => {
         this.setState({ showDeleteOrderModal: false });
     }
 
-    async handleDeleteOrderModalSubmit() {
+    handleDeleteOrderModalSubmit = async () => {
         this.setState({ showDeleteOrderModal: false });
 
         await this.props.onDelete(this.props.order);

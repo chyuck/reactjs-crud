@@ -2,13 +2,7 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
 export default class DeleteOrderModal extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    async handleSubmit() {
+    handleSubmit = async () => {
         await this.props.onSubmit(this.props.order);
     }
 

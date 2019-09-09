@@ -12,28 +12,21 @@ export default class UpdateOrderModal extends React.Component {
             quantity: props.order.quantity.toString(),
             active: props.order.active ? validator.activeValues.yes : validator.activeValues.no
         };
-
-        this.handleProductChange = this.handleProductChange.bind(this);
-        this.handleQuantityChange = this.handleQuantityChange.bind(this);
-        this.handleActiveChange = this.handleActiveChange.bind(this);
-
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleOpen = this.handleOpen.bind(this);
     }
 
-    handleProductChange(event) {
+    handleProductChange = (event) => {
         this.setState({ product: event.target.value });
     }
 
-    handleQuantityChange(event) {
+    handleQuantityChange = (event) => {
         this.setState({ quantity: event.target.value });
     }
 
-    handleActiveChange(event) {
+    handleActiveChange = (event) => {
         this.setState({ active: event.target.value });
     }
 
-    async handleSubmit() {
+    handleSubmit = async () => {
         await this.props.onSubmit({
             id: this.props.order.id,
             product: this.state.product,
@@ -44,7 +37,7 @@ export default class UpdateOrderModal extends React.Component {
         });
     }
 
-    handleOpen() {
+    handleOpen = () => {
         this.setState({
             product: this.props.order.product,
             quantity: this.props.order.quantity.toString(),
