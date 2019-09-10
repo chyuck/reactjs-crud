@@ -8,7 +8,10 @@
   },
   "keywords": [
     "reactjs",
-    "crud"
+    "crud",
+    "bootstrap",
+    "redux",
+    "thunk"
   ],
   "author": "Andrey Sergeev",
   "license": "MIT",
