@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import "./DeleteOrderButton.css";
 import { Button, Modal } from "react-bootstrap";
 import PropTypes from "prop-types";
-import * as validator from "../helpers/validator";
 import { connect } from "react-redux";
 import { deleteOrder } from "../redux/actions";
+import * as formatter from "../helpers/formatter";
 
-export function DeleteOrderButton(props) {
+export function DeleteOrderButton({ order, deleteOrder }) {
 
     const [showModal, setShowModal] = useState(false);
     
     const handleDelete = () => {
-        props.deleteOrder(props.order);
+        deleteOrder(order);
 
         handleClose();
     }
@@ -30,9 +30,9 @@ export function DeleteOrderButton(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <p>Do you want to delete the order?</p>
-                    <p><b>Product:</b> {props.order.product}</p>
-                    <p><b>Quantity:</b> {props.order.quantity}</p>
-                    <p><b>Active:</b> {props.order.active ? validator.activeValues.yes : validator.activeValues.no}</p>
+                    <p><b>Product:</b> {order.product}</p>
+                    <p><b>Quantity:</b> {order.quantity}</p>
+                    <p><b>Active:</b> {formatter.formatActive(order.active)}</p>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Close</Button>

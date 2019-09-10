@@ -1,59 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import "./UpdateOrderButton.css";
 import { Button, Modal, Form } from "react-bootstrap";
 import * as formatter from "../helpers/formatter";
 import * as validator from "../helpers/validator";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { updateOrder } from "../redux/actions";
 
-export default class UpdateOrderModal extends React.Component {
-    constructor(props) {
-        super(props);
+export function UpdateOrderButton({ order, updateOrder }) {
+    
+    const [showModal, setShowModal] = useState(false);
+
+    const [product, updateProduct] = useState("");
+    const [quantity, updateQuantity] = useState("");
+    const [active, updateActive] = useState(validator.activeValues.yes);
+
+    const productValid = validator.validateProduct(product);
+    const quantityValid = validator.validateQuantity(quantity);
+    const activeValid = validator.validateActive(active);
+    const buttonEnabled = productValid && quantityValid && activeValid;
         
-        this.state = {
-            product: props.order.product,
-            quantity: props.order.quantity.toString(),
-            active: props.order.active ? validator.activeValues.yes : validator.activeValues.no
-        };
-    }
-
-    handleProductChange = (event) => {
-        this.setState({ product: event.target.value });
-    }
-
-    handleQuantityChange = (event) => {
-        this.setState({ quantity: event.target.value });
-    }
-
-    handleActiveChange = (event) => {
-        this.setState({ active: event.target.value });
-    }
-
-    handleSubmit = async () => {
-        await this.props.onSubmit({
-            id: this.props.order.id,
-            product: this.state.product,
-            quantity: parseInt(this.state.quantity),
-            active: this.state.active === validator.activeValues.yes,
-            created: this.props.order.created,
-            updated: this.props.order.updated,
+    const handleUpdate = () => {
+        updateOrder({
+            id: order.id,
+            product: product,
+            quantity: parseInt(quantity),
+            active: active === validator.activeValues.yes,
+            created: order.created,
+            updated: order.updated
         });
+        
+        handleClose();
     }
 
-    handleOpen = () => {
-        this.setState({
-            product: this.props.order.product,
-            quantity: this.props.order.quantity.toString(),
-            active: this.props.order.active ? validator.activeValues.yes : validator.activeValues.no
-        });
+    const handleClose = () => {
+        setShowModal(false);
     }
 
-    render() {
-        const productValid = validator.validateProduct(this.state.product);
-        const quantityValid = validator.validateQuantity(this.state.quantity);
-        const activeValid = validator.validateActive(this.state.active);
-        const buttonEnabled = productValid && quantityValid && activeValid;
+    const handleModalShow = () => {
+        updateProduct(order.product);
+        updateQuantity(order.quantity.toString());
+        updateActive(formatter.formatActive(order.active));
+    }
 
-        return (
-            <Modal show={this.props.show} onHide={this.props.onClose} onShow={this.handleOpen}>
+    return (
+        <span>
+            <Button variant="primary" size="sm" className="update-button" onClick={() => setShowModal(true)}>Update</Button>
+
+            <Modal show={showModal} onHide={handleClose} onShow={handleModalShow}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Order</Modal.Title>
                 </Modal.Header>
@@ -64,15 +58,15 @@ export default class UpdateOrderModal extends React.Component {
                             type="text" 
                             size="sm" 
                             readOnly 
-                            defaultValue={this.props.order.id}/>
+                            defaultValue={order.id}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Product</Form.Label>
                         <Form.Control 
                             type="text" 
                             size="sm"
-                            value={this.state.product} 
-                            onChange={this.handleProductChange}
+                            value={product} 
+                            onChange={(event) => updateProduct(event.target.value)}
                             isValid={productValid}
                             isInvalid={!productValid}/>
                         <Form.Control.Feedback type="valid">{validator.validMessage}</Form.Control.Feedback>
@@ -83,8 +77,8 @@ export default class UpdateOrderModal extends React.Component {
                         <Form.Control 
                             type="number" 
                             size="sm"
-                            value={this.state.quantity} 
-                            onChange={this.handleQuantityChange}
+                            value={quantity} 
+                            onChange={(event) => updateQuantity(event.target.value)}
                             isValid={quantityValid}
                             isInvalid={!quantityValid}/>
                         <Form.Control.Feedback type="valid">{validator.validMessage}</Form.Control.Feedback>
@@ -95,8 +89,8 @@ export default class UpdateOrderModal extends React.Component {
                         <Form.Control 
                             as="select" 
                             size="sm"
-                            value={this.state.active} 
-                            onChange={this.handleActiveChange}
+                            value={active} 
+                            onChange={(event) => updateActive(event.target.value)}
                             isValid={activeValid}
                             isInvalid={!activeValid}>
                             <option>{validator.activeValues.yes}</option>
@@ -111,7 +105,7 @@ export default class UpdateOrderModal extends React.Component {
                             type="text" 
                             size="sm"
                             readOnly 
-                            defaultValue={formatter.formatDateString(this.props.order.created)}/>
+                            defaultValue={formatter.formatDateString(order.created)}/>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Update Time</Form.Label>
@@ -119,19 +113,19 @@ export default class UpdateOrderModal extends React.Component {
                             type="text" 
                             size="sm"
                             readOnly 
-                            defaultValue={formatter.formatDateString(this.props.order.updated)}/>
+                            defaultValue={formatter.formatDateString(order.updated)}/>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={this.props.onClose}>Close</Button>
-                    <Button variant="success" onClick={this.handleSubmit} disabled={!buttonEnabled}>Update</Button>
+                    <Button variant="secondary" onClick={handleClose}>Close</Button>
+                    <Button variant="success" onClick={handleUpdate} disabled={!buttonEnabled}>Update</Button>
                 </Modal.Footer>
             </Modal>
-        )
-    }
+        </span>
+    );
 }
 
-UpdateOrderModal.propTypes = {
+UpdateOrderButton.propTypes = {
     order: PropTypes.exact({
         id: PropTypes.string.isRequired,
         product: PropTypes.string.isRequired,
@@ -140,7 +134,10 @@ UpdateOrderModal.propTypes = {
         created: PropTypes.string.isRequired,
         updated: PropTypes.string.isRequired
     }).isRequired,
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    updateOrder: PropTypes.func.isRequired
 }
+
+export default connect(
+    (_, ownProps) => ownProps,
+    { updateOrder }
+)(UpdateOrderButton);
