@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import * as formatter from "../helpers/formatter";
 import * as validator from "../helpers/validator";
+import PropTypes from "prop-types";
 
 export default class UpdateOrderModal extends React.Component {
     constructor(props) {
@@ -128,4 +129,18 @@ export default class UpdateOrderModal extends React.Component {
             </Modal>
         )
     }
+}
+
+UpdateOrderModal.propTypes = {
+    order: PropTypes.exact({
+        id: PropTypes.string.isRequired,
+        product: PropTypes.string.isRequired,
+        quantity: PropTypes.number.isRequired,
+        active: PropTypes.bool.isRequired,
+        created: PropTypes.string.isRequired,
+        updated: PropTypes.string.isRequired
+    }).isRequired,
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 }

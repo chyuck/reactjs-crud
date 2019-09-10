@@ -1,6 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 import OrderListTableRow from "./OrderListTableRow";
+import PropTypes from "prop-types";
 
 export default class OrderListTable extends React.Component {
     render() {
@@ -28,4 +29,18 @@ export default class OrderListTable extends React.Component {
             </Table>
         )
     }
+}
+
+OrderListTable.propTypes = {
+    orders: PropTypes.arrayOf(
+        PropTypes.exact({
+            id: PropTypes.string.isRequired,
+            product: PropTypes.string.isRequired,
+            quantity: PropTypes.number.isRequired,
+            active: PropTypes.bool.isRequired,
+            created: PropTypes.string.isRequired,
+            updated: PropTypes.string.isRequired
+        })).isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 }

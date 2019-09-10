@@ -59,7 +59,7 @@ export default class LocalDataService {
         }
     
         const timestamp = new Date().toISOString();
-        existingOrder.update = timestamp;
+        existingOrder.updated = timestamp;
     
         existingOrder.product = order.product;
         existingOrder.quantity = order.quantity;

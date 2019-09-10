@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import * as validator from "../helpers/validator";
+import PropTypes from "prop-types";
 
 export default class CreateOrderModal extends React.Component {
     constructor(props) {
@@ -100,4 +101,10 @@ export default class CreateOrderModal extends React.Component {
             </Modal>
         )
     }
+}
+
+CreateOrderModal.propTypes = {
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 }

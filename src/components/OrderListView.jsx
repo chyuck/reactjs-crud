@@ -5,6 +5,7 @@ import OrderListTable from "./OrderListTable";
 import CreateOrderModal from "./CreateOrderModal";
 import { connect } from "react-redux";
 import { refreshOrders, createOrder, updateOrder, deleteOrder } from "../redux/actions";
+import PropTypes from "prop-types";
 
 export class OrderListView extends React.Component {
     constructor(props) {
@@ -63,6 +64,22 @@ export class OrderListView extends React.Component {
             </div>
         );
     }
+}
+
+OrderListView.propTypes = {
+    orders: PropTypes.arrayOf(
+        PropTypes.exact({
+            id: PropTypes.string.isRequired,
+            product: PropTypes.string.isRequired,
+            quantity: PropTypes.number.isRequired,
+            active: PropTypes.bool.isRequired,
+            created: PropTypes.string.isRequired,
+            updated: PropTypes.string.isRequired
+        })).isRequired,
+    refreshOrders: PropTypes.func.isRequired,
+    createOrder: PropTypes.func.isRequired,
+    updateOrder: PropTypes.func.isRequired,
+    deleteOrder: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {

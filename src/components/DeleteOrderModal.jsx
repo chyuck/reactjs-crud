@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 export default class DeleteOrderModal extends React.Component {
     handleSubmit = async () => {
@@ -25,4 +26,15 @@ export default class DeleteOrderModal extends React.Component {
             </Modal>
         )
     }
+}
+
+DeleteOrderModal.propTypes = {
+    order: PropTypes.shape({
+        product: PropTypes.string.isRequired,
+        quantity: PropTypes.number.isRequired,
+        active: PropTypes.bool.isRequired
+    }).isRequired,
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
 }

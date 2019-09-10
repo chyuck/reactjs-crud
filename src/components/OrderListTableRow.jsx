@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import * as formatter from "../helpers/formatter";
 import DeleteOrderModal from "./DeleteOrderModal";
 import UpdateOrderModal from "./UpdateOrderModal";
+import PropTypes from "prop-types";
 
 export default class OrderListTableRow extends React.Component {
     constructor(props) {
@@ -80,4 +81,17 @@ export default class OrderListTableRow extends React.Component {
             </tr> 
         )
     }
+}
+
+OrderListTableRow.propTypes = {
+    order: PropTypes.exact({
+        id: PropTypes.string.isRequired,
+        product: PropTypes.string.isRequired,
+        quantity: PropTypes.number.isRequired,
+        active: PropTypes.bool.isRequired,
+        created: PropTypes.string.isRequired,
+        updated: PropTypes.string.isRequired
+    }).isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired
 }
