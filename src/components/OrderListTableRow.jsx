@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import * as formatter from "../helpers/formatter";
-import DeleteOrderModal from "./DeleteOrderModal";
+import DeleteOrderButton from "./DeleteOrderButton";
 import UpdateOrderModal from "./UpdateOrderModal";
 import PropTypes from "prop-types";
 
@@ -10,8 +10,7 @@ export default class OrderListTableRow extends React.Component {
         super(props);
 
         this.state = {
-            showUpdateOrderModal: false,
-            showDeleteOrderModal: false
+            showUpdateOrderModal: false
         };
     }
 
@@ -27,20 +26,6 @@ export default class OrderListTableRow extends React.Component {
         this.setState({ showUpdateOrderModal: false });
 
         await this.props.onUpdate(updatedOrder);
-    }
-
-    handleDeleteButtonClick = () => {
-        this.setState({ showDeleteOrderModal: true });
-    }
-
-    handleDeleteOrderModalClose = () => {
-        this.setState({ showDeleteOrderModal: false });
-    }
-
-    handleDeleteOrderModalSubmit = async () => {
-        this.setState({ showDeleteOrderModal: false });
-
-        await this.props.onDelete(this.props.order);
     }
 
     render() {
@@ -65,18 +50,7 @@ export default class OrderListTableRow extends React.Component {
                         onClose={this.handleUpdateOrderModalClose} 
                         onSubmit={this.handleUpdateOrderModalSubmit} />
 
-                    <Button 
-                        variant="danger" 
-                        size="sm" 
-                        className="button" 
-                        onClick={this.handleDeleteButtonClick}>
-                        Delete
-                    </Button>
-                    <DeleteOrderModal 
-                        show={this.state.showDeleteOrderModal} 
-                        order={this.props.order} 
-                        onClose={this.handleDeleteOrderModalClose} 
-                        onSubmit={this.handleDeleteOrderModalSubmit} />
+                    <DeleteOrderButton order={this.props.order} />
                 </td>
             </tr> 
         )
