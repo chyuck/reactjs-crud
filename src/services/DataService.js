@@ -2,7 +2,7 @@ import config from "../helpers/config";
 import LocalDataService from "./LocalDataService";
 import ApiDataService from "./ApiDataService";
 
-export default class DataService {
+export class DataService {
     constructor() {
         this.dataService = config.api.use ? new ApiDataService(config.api.url) : new LocalDataService();
     }
@@ -27,3 +27,7 @@ export default class DataService {
         return await this.dataService.deleteOrder(order);
     }
 }
+
+const dataService = new DataService();
+
+export default dataService;

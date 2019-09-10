@@ -1,30 +1,22 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import "./OrderListView.css";
-import DataService from "../services/DataService";
 import OrderListTable from "./OrderListTable";
 import CreateOrderModal from "./CreateOrderModal";
+import { connect } from "react-redux";
+import { refreshOrders, createOrder, updateOrder, deleteOrder } from "../redux/actions";
 
-export default class OrderListView extends React.Component {
+export class OrderListView extends React.Component {
     constructor(props) {
         super(props);
 
-        this.dataService = new DataService();
-
         this.state = { 
-            orders: [],
             showCreateOrderModal: false
         };
     }
     
-    async componentDidMount() {
-        await this.refreshOrders();
-    }
-
-    refreshOrders = async () => {
-        const orders = await this.dataService.getOrders();
-
-        this.setState({ orders });
+    componentDidMount() {
+        this.props.refreshOrders();
     }
 
     handleCreateOrderButtonClick = () => {
@@ -36,22 +28,17 @@ export default class OrderListView extends React.Component {
     }
 
     handleCreateOrderModalSubmit = async (newOrder) => {
-        await this.dataService.createOrder(newOrder);
-        const orders = await this.dataService.getOrders();
+        this.props.createOrder(newOrder);
 
-        this.setState({ showCreateOrderModal: false, orders });
+        this.setState({ showCreateOrderModal: false });
     }
 
-    handleOrderUpdate = async (order) => {
-        await this.dataService.updateOrder(order);
-        
-        await this.refreshOrders();
+    handleOrderUpdate = (order) => {
+        this.props.updateOrder(order);
     }
 
-    handleOrderDelete = async (order) => {
-        await this.dataService.deleteOrder(order);
-        
-        this.refreshOrders();
+    handleOrderDelete = (order) => {
+        this.props.deleteOrder(order);
     }
 
     render() {
@@ -70,10 +57,21 @@ export default class OrderListView extends React.Component {
                 />
 
                 <OrderListTable 
-                    orders={this.state.orders} 
+                    orders={this.props.orders} 
                     onUpdate={this.handleOrderUpdate} 
                     onDelete={this.handleOrderDelete}/>
             </div>
         );
     }
-};
+}
+
+function mapStateToProps(state) {
+    return { 
+        orders: state.orders 
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    {refreshOrders, createOrder, updateOrder, deleteOrder}
+)(OrderListView);

@@ -27,27 +27,33 @@ export default class LocalDataService {
     }
 
     async getOrders() {
-        return Promise.resolve(this.orders);
+        const orders = this.orders.map(order => Object.assign({}, order));
+
+        return await Promise.resolve(orders);
     }
     
     async getOrder(id) {
-        return Promise.resolve(this.orders.find(order => order.id === id));
+        const order = await Promise.resolve(this.orders.find(order => order.id === id));
+
+        return Object.assign({}, order);
     }
     
     async createOrder(order) {
-        order.id = uuid();
+        const newOrder = Object.assign({}, order);
+
+        newOrder.id = uuid();
         
         const timestamp = new Date().toISOString();
-        order.created = timestamp;
-        order.updated = timestamp;
+        newOrder.created = timestamp;
+        newOrder.updated = timestamp;
     
-        this.orders.push(order);
+        this.orders.push(newOrder);
     
-        return Promise.resolve(order);
+        return await Promise.resolve(newOrder);
     }
     
     async updateOrder(order) {
-        const existingOrder = await this.getOrder(order.id);
+        const existingOrder = this.orders.find(o => o.id === order.id);
         if (!existingOrder) {
             throw new Error(`Order with ID=${order.id} is not found.`);
         }
@@ -58,13 +64,13 @@ export default class LocalDataService {
         existingOrder.product = order.product;
         existingOrder.quantity = order.quantity;
         existingOrder.active = order.active;
-        
-        return Promise.resolve(existingOrder);
+
+        return await Promise.resolve(Object.assign({}, existingOrder));
     }
     
     async deleteOrder(order) {
         this.orders = this.orders.filter(o => o.id !== order.id);
     
-        return Promise.resolve(order);
+        return await Promise.resolve(Object.assign({}, order));
     }
 }
