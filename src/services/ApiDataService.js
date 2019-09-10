@@ -1,5 +1,3 @@
-
-
 export default class ApiDataService {
     constructor(url) {
         this.ordersUrl = `${url}/orders/`;
